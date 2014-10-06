@@ -15,6 +15,14 @@ app.use('request.userId', function() {
   return this.session('user');
 });
 
+app.get('/api/notebooks/{id}', function(req, res) {
+  var db = getdb(req.userId());
+  db.notebooks.findOne({_id: db.ObjectId(req.params.id)}, function(err, notebook) {
+    if (err) return res.error(500, err.toString());
+    res.send(notebook);
+  });
+});
+
 app.get('/api/notebooks', function(req, res) {
   var db = getdb(req.userId());
   db.notebooks.find().sort({name: 1}, function(err, notebooks) {
