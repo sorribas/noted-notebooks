@@ -31,6 +31,18 @@ app.get('/api/notebooks', function(req, res) {
   });
 });
 
+app.put('/api/notebooks/{id}', function(req, res) {
+  var db = getdb(req.userId());
+  req.on('json', function(notebook) {
+    notebook._id = db.ObjectId(req.params.id);
+
+    db.notebooks.save(notebook, function(err, notebook) {
+      if (err) return res.error(500, err.toString());
+      res.send(notebook);
+    });
+  });
+});
+
 app.post('/api/notebooks', function(req, res) {
   var db = getdb(req.userId());
   req.on('json', function(form) {
